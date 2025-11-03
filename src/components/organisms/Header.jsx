@@ -16,7 +16,14 @@ const Header = ({ cartItemCount = 0, onSearch }) => {
     { label: "Orders", path: "/orders", icon: "Package" },
 ];
 
-  const { logout } = useContext(AuthContext);
+// Safe context access with null check to prevent destructuring errors
+  const authContext = useContext(AuthContext);
+  const logout = authContext?.logout;
+  
+  // Log warning if context is not available for debugging
+  if (!authContext) {
+    console.warn('AuthContext is not available. Ensure AuthContext.Provider is wrapping this component.');
+  }
   const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
