@@ -1,8 +1,10 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { AuthContext } from "../../App";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
 import SearchBar from "@/components/molecules/SearchBar";
 
 const Header = ({ cartItemCount = 0, onSearch }) => {
@@ -12,8 +14,10 @@ const Header = ({ cartItemCount = 0, onSearch }) => {
   const navItems = [
     { label: "Home", path: "/", icon: "Home" },
     { label: "Orders", path: "/orders", icon: "Package" },
-  ];
+];
 
+  const { logout } = useContext(AuthContext);
+  const { isAuthenticated } = useSelector((state) => state.user);
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,6 +57,18 @@ const Header = ({ cartItemCount = 0, onSearch }) => {
                   {item.label}
                 </Button>
               ))}
+              
+              {/* Logout Button for Desktop */}
+              {isAuthenticated && (
+                <Button
+                  variant="ghost"
+                  onClick={logout}
+                  size="sm"
+                >
+                  <ApperIcon name="LogOut" size={16} className="mr-2" />
+                  Logout
+                </Button>
+              )}
             </nav>
 
             {/* Cart Icon */}
@@ -118,6 +134,18 @@ const Header = ({ cartItemCount = 0, onSearch }) => {
               </Badge>
             )}
           </Button>
+          
+          {/* Logout Button for Mobile */}
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              onClick={logout}
+              className="flex flex-col items-center p-3 text-gray-600"
+            >
+              <ApperIcon name="LogOut" size={20} />
+              <span className="text-xs mt-1">Logout</span>
+            </Button>
+          )}
         </div>
       </nav>
     </header>
